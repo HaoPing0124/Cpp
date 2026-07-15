@@ -1,133 +1,58 @@
-//namespace bit
-//
-//{
-//
-//    class string
-//
-//    {
-//
-//        friend ostream& operator<<(ostream& _cout, const bit::string& s);
-//
-//        friend istream& operator >>(istream& _cin, bit::string& s);
-//
-//    public:
-//
-//        typedef char* iterator;
-//
-//    public:
-//
-//        string(const char* str = "");
-//
-//        string(const string& s);
-//
-//        string& operator=(const string& s);
-//
-//        ~string();
-//
-//
-//
-//            //////////////////////////////////////////////////////////////
-//
-//            // iterator
-//
-//            iterator begin()；
-//
-//            iterator end()；
-//
-//
-//
-//            /////////////////////////////////////////////////////////////
-//
-//            // modify
-//
-//            void push_back(char c);
-//
-//        string& operator+=(char c);
-//
-//        void append(const char* str);
-//
-//        string& operator+=(const char* str);
-//
-//        void clear();
-//
-//        void swap(string& s);
-//
-//        const char* c_str()const;
-//
-//
-//
-//        /////////////////////////////////////////////////////////////
-//
-//        // capacity
-//
-//        size_t size()const
-//
-//            size_t capacity()const
-//
-//            bool empty()const
-//
-//            void resize(size_t n, char c = '\0');
-//
-//        void reserve(size_t n);
-//
-//
-//
-//        /////////////////////////////////////////////////////////////
-//
-//        // access
-//
-//        char& operator[](size_t index);
-//
-//        const char& operator[](size_t index)const;
-//
-//
-//
-//        /////////////////////////////////////////////////////////////
-//
-//        //relational operators
-//
-//        bool operator<(const string& s);
-//
-//        bool operator<=(const string& s);
-//
-//        bool operator>(const string& s);
-//
-//        bool operator>=(const string& s);
-//
-//        bool operator==(const string& s);
-//
-//        bool operator!=(const string& s);
-//
-//
-//
-//        // 返回c在string中第一次出现的位置
-//
-//        size_t find(char c, size_t pos = 0) const;
-//
-//        // 返回子串s在string中第一次出现的位置
-//
-//        size_t find(const char* s, size_t pos = 0) const;
-//
-//        // 在pos位置上插入字符c/字符串str，并返回该字符的位置
-//
-//        string& insert(size_t pos, char c);
-//
-//        string& insert(size_t pos, const char* str);
-//
-//
-//
-//        // 删除pos位置上的元素，并返回该元素的下一个位置
-//
-//        string& erase(size_t pos, size_t len);
-//
-//    private:
-//
-//        char* _str;
-//
-//        size_t _capacity;
-//
-//        size_t _size;
-//
-//    }
-//
-//};
+#include <iostream>
+#include <vector>
+#include <limits.h>
+using namespace std;
+int main() {
+    int n, m;
+    while (cin >> n >> m) { // 注意 while 处理多个 case
+        vector<int> a(n + 9);
+
+        for (int i = 1; i <= n; ++i) {
+            cin >> a[i];
+        }
+
+        if (a[1] >= m)
+        {
+            cout << 1 << " " << 1;
+            return 0;
+        }
+
+        //滑动窗口
+        int left, right;
+        left = 1, right = 2;
+        int res_l = 0, res_r = 0;
+
+        int len = INT_MAX;
+
+        int res = a[left];
+
+        while (left < n && right < n)
+        {
+            if (res >= m)
+            {
+                if ((right - left) < len)
+                {
+                    len = right - left;
+                    res_l = left;
+                    res_r = right - 1;
+                }
+                res -= a[left--];
+                // left--;
+            }
+            else
+            {
+                res += a[right];
+                if (res >= m)
+                    continue;
+                right++;
+            }
+
+        }
+
+
+
+
+        cout << res_l << " " << res_r;
+    }
+}
+// 64 位输出请用 printf("%lld")
