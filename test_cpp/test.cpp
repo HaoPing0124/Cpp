@@ -1,58 +1,45 @@
 #include <iostream>
 #include <vector>
 #include <limits.h>
+#include <unordered_map>
 using namespace std;
-int main() {
-    int n, m;
-    while (cin >> n >> m) { // 注意 while 处理多个 case
-        vector<int> a(n + 9);
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        if (s.empty() || s.size() < t.size()) return "";
+        unordered_map<char, int> hash1;
+        unordered_map<char, int> hash2;
+        string res = "";
 
-        for (int i = 1; i <= n; ++i) {
-            cin >> a[i];
-        }
-
-        if (a[1] >= m)
+        for (auto& ch : t) hash1[ch]++;
+        int n = s.size(), m = t.size();
+        int l = 0, count = 0;
+        int minStr = INT_MAX, len = 1;
+        for (int r = 0; r < n; ++r, ++len)
         {
-            cout << 1 << " " << 1;
-            return 0;
-        }
+            if (hash1[s[r]] && ++hash2[s[r]] <= hash1[s[r]]) count++;
 
-        //滑动窗口
-        int left, right;
-        left = 1, right = 2;
-        int res_l = 0, res_r = 0;
-
-        int len = INT_MAX;
-
-        int res = a[left];
-
-        while (left < n && right < n)
-        {
-            if (res >= m)
+            if (count == m && minStr > len)
             {
-                if ((right - left) < len)
-                {
-                    len = right - left;
-                    res_l = left;
-                    res_r = right - 1;
-                }
-                res -= a[left--];
-                // left--;
+                minStr = len;
+                res = s.substr(l, len);
             }
-            else
+            while (count == m)
             {
-                res += a[right];
-                if (res >= m)
-                    continue;
-                right++;
+                if (hash1[s[l]] && --hash2[s[l]] < hash1[s[l]]) count--;
+                len--;
+                l++;
             }
-
         }
-
-
-
-
-        cout << res_l << " " << res_r;
+        return res;
     }
+};
+
+int main()
+{
+    Solution test;
+    string s = "ADOBECODEBANC";
+    string t = "ABC";
+    string res = test.minWindow(s, t);
+    return 0;
 }
-// 64 位输出请用 printf("%lld")
