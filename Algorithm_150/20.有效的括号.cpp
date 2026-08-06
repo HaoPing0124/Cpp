@@ -1,13 +1,46 @@
-//20.��Ч������
-//����һ��ֻ���� '('��')'��'{'��'}'��'['��']' ���ַ��� s ���ж��ַ����Ƿ���Ч��
-//��Ч�ַ��������㣺
-//1.�����ű�������ͬ���͵������űպϡ�
-//2.�����ű�������ȷ��˳��պϡ�
-//3.ÿ�������Ŷ���һ����Ӧ����ͬ���͵������š�
+/*
+题意：
+    给定一个只包含 '('、')'、'['、']'、'{'、'}' 的字符串 s，
+    判断字符串中的括号是否有效。
 
-#include"Algorithm_150.h"
+    有效字符串需要满足：
+        1. 左括号必须由相同类型的右括号关闭；
+        2. 左括号必须按照正确的顺序关闭；
+        3. 每个右括号都必须有对应的左括号。
 
-class Solution1 {
+思路：
+    使用栈。
+
+    括号匹配具有后进先出的特点：
+    最后出现的左括号，必须最先被右括号关闭。
+
+    遍历字符串中的每个字符：
+
+        1. 如果遇到左括号，
+           就把它对应的右括号压入栈中。
+
+           例如：
+               遇到 '('，压入 ')'
+               遇到 '['，压入 ']'
+               遇到 '{'，压入 '}'
+
+        2. 如果遇到右括号：
+               如果栈为空，说明当前右括号没有对应的左括号；
+               如果栈顶字符不等于当前右括号，说明括号类型或顺序错误；
+               否则匹配成功，弹出栈顶。
+
+    遍历结束后：
+        如果栈为空，说明所有括号都正确匹配；
+        如果栈不为空，说明还有左括号没有被关闭。
+
+时间复杂度：O(n)
+空间复杂度：O(n)
+*/
+
+#include "Algorithm_150.h"
+
+class Solution
+{
     unordered_map<char, char> mp = {
         {'(', ')'},
         {'[', ']'},
@@ -15,48 +48,39 @@ class Solution1 {
     };
 
 public:
-    bool isValid(string s) {
+    bool isValid(string s)
+    {
+        // 有效括号字符串的长度一定是偶数
         if (s.size() % 2)
+        {
             return false;
+        }
+
+        // 栈中保存当前期待出现的右括号
         stack<char> st;
-        for (auto x : s) {
-            if (x == '(' || x == '[' || x == '{')
-                st.push(mp[x]);
-            else {
-                if (st.empty() || st.top() != x)
+
+        for (auto &ch : s)
+        {
+            // 检查 键，也就是是否是 左括号
+            if (mp.count(ch))
+            {
+                // 是左括号则压入栈
+                st.push(ch);
+            }
+            else
+            {
+                // 如果是 右括号 要检查 栈顶元素 是否是对应的 左括号
+                if (st.empty() || mp[st.top()] != ch)
+                {
                     return false;
+                }
+
+                // 配对完成则弹出
                 st.pop();
             }
         }
-        return st.empty();
-    }
-};
 
-
-class Solution2 {
-public:
-    bool isValid(string s) {
-        if (s.size() % 2)
-            return false;
-        stack<char> st;
-        for (auto x : s)
-        {
-            if (x == '(' || x == '[' || x == '{')
-                st.push(x);
-            else
-            {
-                if (!st.empty())
-                {
-                    if (x == ')' && st.top() != '(') return false;
-                    else if (x == ']' && st.top() != '[') return false;
-                    else if (x == '}' && st.top() != '{') return false;
-                    st.pop();
-                }
-                else
-                    return false;
-            }
-
-        }
+        // 栈为空说明所有左括号都已经正确关闭
         return st.empty();
     }
 };
