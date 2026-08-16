@@ -23,25 +23,40 @@ public:
     int search(vector<int>& nums, int target) {
         int n = nums.size();
         int l = -1, r = n;
-        int mid = 0;
-        while (l + 1 < r)
+
+        while(l + 1 < r)
         {
-            mid = (l + r) >> 1;
-            if (nums[mid] == target) return mid;
-            if (nums[0] <= nums[mid])
+            int mid = l + (r - l) / 2;
+            if(nums[mid] == target) return mid;
+
+            if(nums[0] <= nums[mid])
             {
-                if (target < nums[mid] && target >= nums[0])
+                // 在 nums[0] <= target < nums[mid] 区间中
+                if(target < nums[mid] && target >= nums[0])
+                {
+                    // 值在左半边
                     r = mid;
-                else l = mid;
+                }
+                else
+                {
+                    l = mid;
+                }
             }
             else
             {
-                if (target > nums[mid] && target <= nums[r - 1])
+                // 在 nums[mid] < target <= nums[r - 1] 区间中
+                if(target > nums[mid] && target <= nums[r - 1])
+                {
+                    // 在右半边
                     l = mid;
-                else r = mid;
+                }
+                else
+                {
+                    r = mid;
+                }
             }
-
         }
+        
         return -1;
     }
 };
